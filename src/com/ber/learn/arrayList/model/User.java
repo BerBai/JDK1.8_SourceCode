@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Github：https://github.com/berbai
  * Blog：https://blog.csdn.net/Ber_Bai
  */
-public class User implements Serializable {
+public class User implements Serializable, Cloneable {
     /**
      * 类的序列化由实现`java.io.Serializable`接口的类启用。
      * 不实现此接口的类将不会使任何状态序列化或反序列化。
@@ -22,12 +22,20 @@ public class User implements Serializable {
     private String name;
     private Integer age;
 
+    private Address address;
+
     public User() {
     }
 
     public User(String name, Integer age) {
         this.name = name;
         this.age = age;
+    }
+
+    public User(String name, Integer age, Address address) {
+        this.name = name;
+        this.age = age;
+        this.address = address;
     }
 
     public String getName() {
@@ -46,11 +54,48 @@ public class User implements Serializable {
         this.age = age;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("[").append("name = ").append(this.name).append(", ").append("age = ").append(this.age).append("]");
+        sb.append("[").append("name = ").append(this.name).append(", ").append("age = ").append(this.age);
+        if (address != null)
+            sb.append(", address = ").append(this.address.toString());
+        sb.append("]");
         return sb.toString();
+    }
+
+    /**
+     * 调用super方法为 浅拷贝，不能拷贝引用对象
+     *
+     * @return
+     * @throws CloneNotSupportedException
+     */
+//    @Override
+//    public Object clone() throws CloneNotSupportedException {
+//        return super.clone();
+//    }
+
+
+    /**
+     * 调用引用对象的clone()，实现深拷贝
+     *
+     * @return
+     * @throws CloneNotSupportedException
+     */
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        User user = (User) super.clone();
+        Address address = (Address) this.address.clone();
+        user.setAddress(address);
+        return user;
     }
 }
 
